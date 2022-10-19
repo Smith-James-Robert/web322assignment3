@@ -5,6 +5,8 @@ const path= require("path");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const { test } = require("media-typer");
+const e = require("express");
+var qs = require('qs')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -33,13 +35,16 @@ app.get("/dashboard",function (req,res){
     res.sendFile(path.join(__dirname,"dashboard.html"));
 })
 app.post("/login",function(req,res){
+ 
  var username=req.body.username;
  var password=req.body.password;
  console.log(req.body.username);
  console.log(username);
  const noSpecial=/[!-\/:-@[-`{-~]/;
  //&& noSpecial.test(username)
- if (username!=null && password!=null && !noSpecial.test(username))
+ console.log(req.body.username=='');
+ console.log(req.body.password=='');
+ if (username!='' && password!='' && !noSpecial.test(username))
  {
  console.log("Your password is: " + password);
  console.log("Your username is: " + username);
@@ -48,10 +53,11 @@ app.post("/login",function(req,res){
  else{
    // res.redirect('/login');
    console.log("apple");
-   res.redirect('/login');
+   res.cookie('username',username)
+   .redirect('/login');
  }
  })
- app.post("/register",function(req,res){
+ app.post("/register",function(req,res){    
     var username=req.body.username;
     var password=req.body.password;
     var email=req.body.email;
@@ -61,8 +67,36 @@ app.post("/login",function(req,res){
     var companyName=req.body.companyName;
     var address1=req.body.address1;
     var address2=req.body.address2;
-    console.log(username);
-    console.log(password);
+    var valid=true;
+    const noSpecial=/[!-\/:-@[-`{-~]/;
+    const phoneNumber=/[0-9]{10}/
+    if (username==null || noSpecial.test(username))
+    {
+        valid=false;
+    }
+    if (password==null || !noSpecial.test(password) || password.length<=8)
+    {
+        valid=false;
+    }
+    if (email==null && email.includes('@'))
+    {   
+        valid=false;
+    }
+    if (firstName==null) //No additional Validation required
+    {
+        valid=false;
+    }
+    if (lastName==null) //No additional Validation required
+    {
+        valid=false;
+    }
+    if (phone==null && phoneNumber.test(phone))
+    {
+        valid=false;
+    }
+
+
+    console.log("Valid =" + valid);
     console.log(email);
     console.log(firstName);
     console.log(lastName);
@@ -70,7 +104,16 @@ app.post("/login",function(req,res){
     console.log(companyName);
     console.log(address1);
     console.log(address2);
+    console.log(username);
+    console.log(password);
+    if (valid)
+    {
     res.redirect('/dashboard')
+    }
+    else
+    {
+        res.redirect('/registration');
+    }
  })
 app.get("/iconsmall.png",function(req,res){
     res.sendFile(path.join(__dirname,"icon.png"));
