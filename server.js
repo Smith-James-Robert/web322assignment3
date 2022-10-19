@@ -24,7 +24,9 @@ app.get("/", (req, res) => {
     //res.send("Hello World!");
 });
 app.get("/registration", function(req,res){
-    res.sendFile(path.join(__dirname,"registration.html"));
+    res.render('registration',{
+        layout:false
+    });
 })
 app.get("/blog", function(req,res){
     res.sendFile(path.join(__dirname,"blog.html"));
@@ -84,7 +86,7 @@ validUser=true;
     })
  }
  })
- app.post("/register",function(req,res){    
+ app.post("/registration",function(req,res){    
     var username=req.body.username;
     var password=req.body.password;
     var email=req.body.email;
@@ -95,31 +97,45 @@ validUser=true;
     var address1=req.body.address1;
     var address2=req.body.address2;
     var valid=true;
+    var userValid=true;
+    var passValid=true;
+    var emailValid=true;
+    var phoneValid=true;
+    var firstValid=true;
+    var lastValid=false;
+
     const noSpecial=/[!-\/:-@[-`{-~]/;
     const phoneNumber=/[0-9]{10}/
-    if (username==null || noSpecial.test(username))
+    
+    if (username=='' || noSpecial.test(username))
     {
         valid=false;
+        userValid=false;
     }
-    if (password==null || !noSpecial.test(password) || password.length<=8)
+    if (password=='' || !noSpecial.test(password) || password.length<8)
     {
         valid=false;
+        passValid=false;
     }
-    if (email==null && email.includes('@'))
+    if (!email.includes('@'))
     {   
         valid=false;
+        emailValid=false;
     }
-    if (firstName==null) //No additional Validation required
+    if (firstName=='') //No additional Validation required
     {
         valid=false;
+        firstValid=false;
     }
-    if (lastName==null) //No additional Validation required
+    if (lastName=='') //No additional Validation required
     {
         valid=false;
+        lastValid=false;
     }
-    if (phone==null && phoneNumber.test(phone))
+    if (!phoneNumber.test(phone))
     {
         valid=false;
+        phoneValid=false;
     }
 
 
@@ -133,13 +149,32 @@ validUser=true;
     console.log(address2);
     console.log(username);
     console.log(password);
+    console.log(userValid);
+    console.log(passValid);
+    var someData={
+        phoneNum:phone,
+        validPhone:!phoneValid,
+        user:username,
+        validUser:!userValid,
+        pass:password,
+        validPass:!passValid,
+        emailAddress:email,
+        validEmail:!emailValid,
+        FirstName:firstName,
+        validFirst:!firstValid,
+        LastName:lastName,
+        validLast:!lastValid
+    }
     if (valid)
     {
     res.redirect('/dashboard')
     }
     else
     {
-        res.redirect('/registration');
+        res.render('registration',{
+            data:someData,
+            layout:false
+        })
     }
  })
 app.get("/iconsmall.png",function(req,res){
