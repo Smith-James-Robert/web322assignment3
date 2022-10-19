@@ -6,7 +6,13 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const { test } = require("media-typer");
 const e = require("express");
-var qs = require('qs')
+var qs = require('qs');
+const exphbs = require('express-handlebars');
+
+app.engine('.hbs', exphbs.engine({ extname: '.hbs' }));
+app.set('view engine', '.hbs');
+
+
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -29,22 +35,41 @@ app.get("/article/:id", function(req,res){
 })
 */
 app.get("/login", function(req,res){
-    res.sendFile(path.join(__dirname,"login.html"));
+   // res.sendFile(path.join(__dirname,"login.html"));
+   res.render('login',{
+    layout:false
+   });
 })
 app.get("/dashboard",function (req,res){
     res.sendFile(path.join(__dirname,"dashboard.html"));
 })
 app.post("/login",function(req,res){
  
+
+    const noSpecial=/[!-\/:-@[-`{-~]/;
  var username=req.body.username;
  var password=req.body.password;
+ var validPassword=false;
+ if (password!='' && noSpecial.test(password) && password.length>=8)
+ {
+    validPassword=true;
+ }
+ var validUser=false;
+ if (username!='' && !noSpecial.test(username))
+ {
+validUser=true;
+ }
+ var someData={
+    username:req.body.username,
+    password:req.body.password,
+    passValid:!validPassword,
+    userValid:!validUser
+ }
  console.log(req.body.username);
  console.log(username);
- const noSpecial=/[!-\/:-@[-`{-~]/;
  //&& noSpecial.test(username)
- console.log(req.body.username=='');
- console.log(req.body.password=='');
- if (username!='' && password!='' && !noSpecial.test(username))
+ console.log(validPassword)
+ if (username!='' && validPassword && !noSpecial.test(username))
  {
  console.log("Your password is: " + password);
  console.log("Your username is: " + username);
@@ -53,8 +78,10 @@ app.post("/login",function(req,res){
  else{
    // res.redirect('/login');
    console.log("apple");
-   res.cookie('username',username)
-   .redirect('/login');
+    res.render('login',{
+        data:someData,
+        layout:false
+    })
  }
  })
  app.post("/register",function(req,res){    

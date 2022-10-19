@@ -29,15 +29,27 @@
         <div class="col-6 align-self-center text-center border">
     <form action="/login" method="POST" enctype="application/x-www-form-urlencoded">
         <h2>Log In</h2>
-        <div class="mb-3">
-          <input type="text" id="username" name="username" value="apple" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="username">
+        {{#if data.userValid}}
+                <div class="mb-3">
+          <input type="text" id="username" name="username"  class="form-control is-invalid" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="username" value={{data.username}}>
           <div class="invalid-feedback">Invalid Username</div>
         </div>
+        {{else}}
+        <div class="mb-3">
+          <input type="text" id="username" name="username"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="username" value={{data.username}}>
+        </div>
+        {{/if}}
 
         <div class="mb-3">
+          {{#if data.passValid}}
           <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" id="password" name="password" value =""  class="form-control" id="exampleInputPassword1">
+          <input type="password" id="password" name="password"    id="exampleInputPassword1" (value ={{data.password}}) class="form-control is-invalid">
           <div class="invalid-feedback">Invalid password.</div>
+          {{else}}
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="password" id="password" name="password"    id="exampleInputPassword1" (value ={{data.password}}) class="form-control">
+          <div class="invalid-feedback">Invalid password.</div>
+          {{/if}}
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -46,10 +58,6 @@
         <button type="submit" class="btn btn-primary">Log In</button>
       </form>
   </div>
-  <script>
-    console.log("cookie="+document.cookie)
-  </script>
-
   </div>
 </body>
 
