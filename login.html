@@ -6,8 +6,8 @@
   <title>Login</title>
 </head>
 
-<body>
-    <header class="p-3 text-bg-dark">
+<body class="text-bg-dark">
+    <header class="p-3 text-bg-dark border-bottom">
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <img src="iconsmall.png" class="img:fluid" alt="green slitted eye">
@@ -24,15 +24,18 @@
             <li><a href='/login'  class="nav-link px-2 text-white">Log In</a></li>
             </ul>
           </div>
-    <form>
+        </header>
+      <div class="row justify-content-md-center align-items-center">
+        <div class="col-6 align-self-center text-center border">
+    <form action="/login" method="POST" enctype="application/x-www-form-urlencoded">
         <h2>Log In</h2>
         <div class="mb-3">
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email Address">
+          <input type="text" id="username" name="username" value="apple" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="username">
         </div>
 
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
+          <input type="password" id="password" name="password" value =""  class="form-control" id="exampleInputPassword1">
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -40,6 +43,8 @@
         </div>
         <button type="submit" class="btn btn-primary">Log In</button>
       </form>
+  </div>
+  </div>
 </body>
 
 </html>
